@@ -1,0 +1,46 @@
+:root{
+  --fondo:#F7F4EC; --tarjeta:#FFFFFF; --texto:#222222; --suave:#5A5A52;
+  --principal:#2F6B4F; --principal-osc:#245640; --acento:#B7791F;
+  --alerta:#B03A2E; --borde:#D9D2C3;
+  --letra:18px; --radio:10px;
+}
+*{box-sizing:border-box}
+html{font-size:var(--letra)}
+body{margin:0;background:var(--fondo);color:var(--texto);
+  font-family:"Atkinson Hyperlegible",system-ui,sans-serif;line-height:1.5}
+.app{min-height:100vh;display:flex}
+
+/* Menú: abajo en móvil, lateral en ordenador */
+.lateral{position:fixed;bottom:0;left:0;right:0;z-index:10;
+  background:var(--tarjeta);border-top:1px solid var(--borde)}
+.marca{display:none}
+.menu{display:flex;overflow-x:auto}
+.menu a{flex:1 0 auto;min-width:76px;padding:.75rem .5rem;text-align:center;
+  color:var(--suave);text-decoration:none;font-size:.8rem;border-top:3px solid transparent}
+.menu a[aria-current="page"]{color:var(--principal);font-weight:700;border-top-color:var(--principal)}
+.menu a:focus-visible,.btn:focus-visible{outline:3px solid var(--acento);outline-offset:-3px}
+
+.contenido{flex:1;padding:1rem 1rem 6rem;max-width:960px;width:100%;margin:0 auto}
+.cabecera{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--borde);padding-bottom:.5rem;margin-bottom:1.25rem}
+h1{margin:0;font-size:1.6rem}
+.usuario{color:var(--suave);font-size:.85rem}
+
+.tarjeta{background:var(--tarjeta);border:1px solid var(--borde);
+  border-radius:var(--radio);padding:1.25rem}
+.vacio{color:var(--suave)}
+.vacio strong{display:block;color:var(--texto);font-size:1.1rem;margin-bottom:.25rem}
+.btn{display:inline-block;margin-top:1rem;padding:.8rem 1.4rem;border:0;border-radius:var(--radio);
+  background:var(--principal);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--principal-osc)}
+
+@media (min-width:800px){
+  .lateral{position:sticky;top:0;height:100vh;width:230px;flex:none;
+    border-top:0;border-right:1px solid var(--borde);padding:1.5rem 0}
+  .marca{display:block;font-size:1.4rem;font-weight:700;color:var(--principal);padding:0 1.5rem 1.5rem}
+  .menu{flex-direction:column}
+  .menu a{text-align:left;padding:.8rem 1.5rem;font-size:1rem;border-top:0;border-left:4px solid transparent}
+  .menu a[aria-current="page"]{border-left-color:var(--principal);background:var(--fondo)}
+  .contenido{padding:2rem 2rem 3rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
