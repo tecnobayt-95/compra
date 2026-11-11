@@ -44,3 +44,17 @@ h1{margin:0;font-size:1.6rem}
   .contenido{padding:2rem 2rem 3rem}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Acceso */
+.acceso{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.acceso[hidden],.app[hidden]{display:none}
+.acceso .tarjeta{width:100%;max-width:420px}
+.acceso h1{color:var(--principal);margin-bottom:.25rem}
+.acceso p{margin:0 0 1rem;color:var(--suave)}
+label{display:block;font-weight:700;margin:1rem 0 .3rem}
+input{width:100%;padding:.8rem;font:inherit;border:1px solid var(--borde);border-radius:var(--radio);background:#fff;color:var(--texto)}
+input:focus-visible{outline:3px solid var(--acento);outline-offset:1px}
+.acceso .btn{width:100%;margin-top:1.5rem}
+.error{color:var(--alerta);font-weight:700;margin:1rem 0 0;min-height:1.5rem}
+.btn-salir{margin-left:.75rem;padding:.3rem .7rem;font:inherit;font-size:.8rem;border:1px solid var(--borde);
+  border-radius:var(--radio);background:var(--tarjeta);color:var(--texto);cursor:pointer}

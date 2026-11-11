@@ -1,4 +1,4 @@
-import "./firebase-config.js";
+import { iniciarAcceso } from "./auth.js";
 
 // Lista de módulos. Para quitar una función, borra o comenta su línea.
 const modulos = [
@@ -30,4 +30,8 @@ function pintar() {
 }
 
 addEventListener("hashchange", pintar);
-pintar();
+
+iniciarAcceso(
+  () => pintar(),
+  () => { vista.innerHTML = ""; }
+);
