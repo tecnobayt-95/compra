@@ -1,15 +1,20 @@
 import { iniciarAcceso } from "./auth.js";
 import { montarProductos } from "./productos.js";
+import { montarLista } from "./lista.js";
+import { montarInicio, montarGastos } from "./resumen.js";
+import { montarAjustes, aplicarLetra } from "./ajustes.js";
+
+aplicarLetra();
 
 // Lista de módulos. Para quitar una función, borra o comenta su línea.
 const modulos = [
-  { id: "inicio",    nombre: "Inicio",    vacio: ["Aún no hay compras este mes", "Cuando registréis productos, aquí verás el resumen."] },
-  { id: "lista",     nombre: "Lista",     vacio: ["La lista está vacía", "Añade lo que falta por comprar."], boton: "Añadir a la lista" },
+  { id: "inicio",    nombre: "Inicio", montar: montarInicio },
+  { id: "lista",     nombre: "Lista", montar: montarLista },
   { id: "productos", nombre: "Productos", montar: montarProductos },
   { id: "despensa",  nombre: "Despensa",  vacio: ["La despensa está vacía", "Aquí verás lo que hay en casa y cuándo caduca."] },
-  { id: "gastos",    nombre: "Gastos",    vacio: ["Sin gastos registrados", "Indica el precio de los productos para ver el total."] },
+  { id: "gastos",    nombre: "Gastos", montar: montarGastos },
   { id: "garantias", nombre: "Garantías", vacio: ["Sin garantías guardadas", "Guarda tickets y fechas de garantía."] },
-  { id: "ajustes",   nombre: "Ajustes",   vacio: ["Ajustes", "Tamaño de letra, usuarios y copia de seguridad."] }
+  { id: "ajustes",   nombre: "Ajustes", montar: montarAjustes }
 ];
 
 const menu = document.getElementById("menu");

@@ -91,3 +91,20 @@ dialog h2{margin:0 0 .5rem}
 .btn-sec{background:var(--tarjeta);color:var(--texto);border:1px solid var(--borde)}
 .btn-sec:hover{background:var(--fondo)}
 @media (max-width:420px){.fila{grid-template-columns:1fr}}
+
+/* Lista, resumen y gastos */
+.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-bottom:1rem}
+.cifras .tarjeta{display:flex;flex-direction:column}
+.cifras b,.grande{font-size:1.6rem;color:var(--principal)}
+.cifras span{color:var(--suave);font-size:.9rem}
+.sub{font-size:1.1rem;margin:1.5rem 0 .6rem}
+.fila-r{display:flex;justify-content:space-between;gap:1rem;margin:.4rem 0}
+.gbar{display:grid;grid-template-columns:110px 1fr auto;gap:.6rem;align-items:center;margin:.5rem 0;font-size:.9rem}
+.gbar div{background:var(--fondo);border-radius:6px;height:14px}
+.gbar i{display:block;height:100%;background:var(--principal);border-radius:6px}
+.item{display:flex;align-items:center;gap:.75rem;background:var(--tarjeta);border:1px solid var(--borde);border-radius:var(--radio);padding:.5rem .75rem;margin-bottom:.6rem}
+.item label{flex:1;display:flex;align-items:center;gap:.9rem;margin:0;font-weight:400;cursor:pointer;min-height:48px}
+.item input{width:28px;height:28px;flex:none}
+.item.hecho label span{text-decoration:line-through;color:var(--suave)}
+.item small{color:var(--suave)}
+.item .mini{flex:none;width:auto;padding:.5rem .8rem}
