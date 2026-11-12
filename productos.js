@@ -73,9 +73,10 @@ export function montarProductos(cont, usuario) {
         <div><label for="fComo">Cómo</label><select id="fComo">${opciones(COMO)}</select></div>
       </div>
       <div class="fila">
-        <div><label for="fPrecio">Precio (€)</label><input id="fPrecio" type="number" min="0" step="0.01" inputmode="decimal"></div>
-        <div><label for="fCat">Categoría</label><select id="fCat">${opciones(CATEGORIAS)}</select></div>
+        <div><label for="fCant">Cantidad</label><input id="fCant" type="number" min="1" step="1" value="1" inputmode="numeric"></div>
+        <div><label for="fPrecio">Precio total (€)</label><input id="fPrecio" type="number" min="0" step="0.01" inputmode="decimal"></div>
       </div>
+      <label for="fCat">Categoría</label><select id="fCat">${opciones(CATEGORIAS)}</select>
       <label for="fNotas">Notas</label>
       <textarea id="fNotas" rows="2" maxlength="300"></textarea>
       <label for="fFotos">Fotos (hasta ${MAX_FOTOS})</label>
@@ -106,6 +107,7 @@ export function montarProductos(cont, usuario) {
     $("fTienda").value = p?.tienda ?? "";
     $("fComo").value = p?.como ?? COMO[0];
     $("fPrecio").value = p?.precio ?? "";
+    $("fCant").value = p?.cantidad ?? 1;
     $("fCat").value = p?.categoria ?? CATEGORIAS[0];
     $("fNotas").value = p?.notas ?? "";
     $("fFotos").value = "";
@@ -136,6 +138,7 @@ export function montarProductos(cont, usuario) {
           <h2>${esc(p.nombre)}</h2>
           <span class="estado ${p.estado}">${p.estado === "comprado" ? "Comprado" : "Pendiente"}</span>
           ${datos ? `<p>${datos}</p>` : ""}
+          ${p.cantidad ? `<p>Cantidad: ${esc(p.cantidad)}</p>` : ""}
           ${p.estado === "comprado" ? `<p>${haceCuanto(p.fecha)}${precio ? " · " + precio : ""}</p>` : (precio ? `<p>${precio}</p>` : "")}
           ${p.notas ? `<p>${esc(p.notas)}</p>` : ""}
           <p>Añadido por ${esc((p.comprador || "").split("@")[0])}</p>
@@ -182,6 +185,7 @@ export function montarProductos(cont, usuario) {
         fecha: estado === "comprado" ? $("fFecha").value : "",
         tienda: $("fTienda").value.trim(),
         como: $("fComo").value,
+        cantidad: $("fCant").value || "1",
         precio: $("fPrecio").value,
         categoria: $("fCat").value,
         notas: $("fNotas").value.trim(),

@@ -23,7 +23,7 @@ export function montarAjustes(cont) {
     if (t) { try { localStorage.setItem("letra", t); } catch { /* ignorar */ } aplicarLetra(); }
     if (e.target.id === "aCsv") {
       const s = await getDocs(collection(db, "productos"));
-      const cab = ["nombre", "estado", "fecha", "tienda", "como", "precio", "categoria", "notas", "comprador"];
+      const cab = ["nombre", "estado", "fecha", "tienda", "como", "cantidad", "precio", "categoria", "notas", "comprador"];
       const f = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
       const filas = s.docs.map(d => cab.map(c => f(d.data()[c])).join(";"));
       const a = document.createElement("a");
