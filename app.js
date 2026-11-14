@@ -2,6 +2,7 @@ import { iniciarAcceso } from "./auth.js";
 import { montarProductos } from "./productos.js";
 import { montarLista } from "./lista.js";
 import { montarInicio, montarGastos } from "./resumen.js";
+import { montarDespensa, montarGarantias } from "./casa.js";
 import { montarAjustes, aplicarLetra } from "./ajustes.js";
 
 aplicarLetra();
@@ -11,9 +12,9 @@ const modulos = [
   { id: "inicio",    nombre: "Inicio", montar: montarInicio },
   { id: "lista",     nombre: "Lista", montar: montarLista },
   { id: "productos", nombre: "Productos", montar: montarProductos },
-  { id: "despensa",  nombre: "Despensa",  vacio: ["La despensa está vacía", "Aquí verás lo que hay en casa y cuándo caduca."] },
+  { id: "despensa",  nombre: "Despensa", montar: montarDespensa },
   { id: "gastos",    nombre: "Gastos", montar: montarGastos },
-  { id: "garantias", nombre: "Garantías", vacio: ["Sin garantías guardadas", "Guarda tickets y fechas de garantía."] },
+  { id: "garantias", nombre: "Garantías", montar: montarGarantias },
   { id: "ajustes",   nombre: "Ajustes", montar: montarAjustes }
 ];
 
@@ -46,3 +47,5 @@ iniciarAcceso(
   usuario => { usuarioActual = usuario; pintar(); },
   () => { soltar(); usuarioActual = null; vista.innerHTML = ""; }
 );
+
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});

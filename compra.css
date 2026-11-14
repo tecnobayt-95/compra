@@ -108,3 +108,9 @@ dialog h2{margin:0 0 .5rem}
 .item.hecho label span{text-decoration:line-through;color:var(--suave)}
 .item small{color:var(--suave)}
 .item .mini{flex:none;width:auto;padding:.5rem .8rem}
+
+.rojo{color:var(--alerta)}
+.aviso-a{color:#8A5A12;font-weight:700}
+.ns{align-self:flex-start;padding:.1rem .6rem;border-radius:999px;font-size:.8rem;font-weight:700;color:#fff}
+.nsA{background:#1E7B45}.nsB{background:#5E8A2A}.nsC{background:#8F6B00}.nsD{background:#B45309}.nsE{background:#B03A2E}
+.mas{margin-top:1rem}.mas summary{cursor:pointer;font-weight:700;color:var(--principal)}

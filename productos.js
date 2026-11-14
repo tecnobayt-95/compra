@@ -10,6 +10,7 @@ const MAX_FOTOS = 3;
 const esc = s => String(s ?? "").replace(/[&<>"']/g,
   c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const opciones = (lista, sel) => lista.map(o => `<option${o === sel ? " selected" : ""}>${o}</option>`).join("");
+const eur = n => n.toLocaleString("es-ES", { minimumFractionDigits: 2 }) + " €";
 const hoy = () => new Date().toISOString().slice(0, 10);
 
 function haceCuanto(iso) {
@@ -38,7 +39,7 @@ function comprimir(file) {
       c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url);
       let q = 0.7, out = c.toDataURL("image/jpeg", q);
-      while (out.length > 300000 && q > 0.3) { q -= 0.1; out = c.toDataURL("image/jpeg", q); }
+      while (out.length > 240000 && q > 0.3) { q -= 0.1; out = c.toDataURL("image/jpeg", q); }
       ok(out);
     };
     img.onerror = () => fallo(new Error("imagen"));
@@ -79,6 +80,20 @@ export function montarProductos(cont, usuario) {
       <label for="fCat">Categoría</label><select id="fCat">${opciones(CATEGORIAS)}</select>
       <label for="fNotas">Notas</label>
       <textarea id="fNotas" rows="2" maxlength="300"></textarea>
+      <details class="mas"><summary>Más datos (opcional)</summary>
+        <label for="fCodigo">Código de barras</label>
+        <div class="fila"><input id="fCodigo" inputmode="numeric" maxlength="14"><button class="btn btn-sec" type="button" id="fBuscar" style="margin:0">Buscar</button></div>
+        <label for="fNutri">Nutri-Score</label>
+        <select id="fNutri"><option value="">Sin dato</option>${"ABCDE".split("").map(l => `<option>${l}</option>`).join("")}</select>
+        <div class="fila">
+          <div><label for="fCad">Caduca el</label><input id="fCad" type="date"></div>
+          <div><label for="fGar">Garantía hasta</label><input id="fGar" type="date"></div>
+        </div>
+        <div class="fila">
+          <div><label for="fOtra">Más barato en</label><input id="fOtra" maxlength="60" placeholder="Otra tienda"></div>
+          <div><label for="fOtraP">Precio allí (€)</label><input id="fOtraP" type="number" min="0" step="0.01" inputmode="decimal"></div>
+        </div>
+      </details>
       <label for="fFotos">Fotos (hasta ${MAX_FOTOS})</label>
       <input id="fFotos" type="file" accept="image/*" multiple>
       <div id="fActuales" class="fotos-act"></div>
@@ -108,6 +123,10 @@ export function montarProductos(cont, usuario) {
     $("fComo").value = p?.como ?? COMO[0];
     $("fPrecio").value = p?.precio ?? "";
     $("fCant").value = p?.cantidad ?? 1;
+    $("fCodigo").value = p?.codigo ?? ""; $("fNutri").value = p?.nutri ?? "";
+    $("fCad").value = p?.caduca ?? ""; $("fGar").value = p?.garantia ?? "";
+    $("fOtra").value = p?.otra ?? ""; $("fOtraP").value = p?.otraP ?? "";
+    cont.querySelector(".mas").open = !!(p && (p.codigo || p.nutri || p.caduca || p.garantia || p.otra));
     $("fCat").value = p?.categoria ?? CATEGORIAS[0];
     $("fNotas").value = p?.notas ?? "";
     $("fFotos").value = "";
@@ -139,6 +158,9 @@ export function montarProductos(cont, usuario) {
           <span class="estado ${p.estado}">${p.estado === "comprado" ? "Comprado" : "Pendiente"}</span>
           ${datos ? `<p>${datos}</p>` : ""}
           ${p.cantidad ? `<p>Cantidad: ${esc(p.cantidad)}</p>` : ""}
+          ${p.nutri ? `<span class="ns ns${esc(p.nutri)}">Nutri-Score ${esc(p.nutri)}</span>` : ""}
+          ${p.caduca ? `<p>Caduca: ${esc(p.caduca)}</p>` : ""}
+          ${p.otra && Number(p.otraP) && Number(p.otraP) < Number(p.precio) ? `<p class="aviso-a">Más barato en ${esc(p.otra)}: ${eur(Number(p.otraP))} (ahorras ${eur(Number(p.precio) - Number(p.otraP))})</p>` : ""}
           ${p.estado === "comprado" ? `<p>${haceCuanto(p.fecha)}${precio ? " · " + precio : ""}</p>` : (precio ? `<p>${precio}</p>` : "")}
           ${p.notas ? `<p>${esc(p.notas)}</p>` : ""}
           <p>Añadido por ${esc((p.comprador || "").split("@")[0])}</p>
@@ -153,6 +175,19 @@ export function montarProductos(cont, usuario) {
   $("pNuevo").onclick = () => abrir(null);
   $("fCancelar").onclick = () => dlg.close();
   $("fEstado").onchange = alternarFecha;
+  $("fBuscar").onclick = async () => {
+    const c = $("fCodigo").value.trim(), err = $("fError");
+    if (!c) return;
+    err.textContent = "Buscando...";
+    try {
+      const r = await (await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(c)}.json?fields=product_name,nutriscore_grade`)).json();
+      if (r.status !== 1) { err.textContent = "No se ha encontrado ese código."; return; }
+      if (!$("fNombre").value) $("fNombre").value = r.product.product_name || "";
+      const g = (r.product.nutriscore_grade || "").toUpperCase();
+      if (g && "ABCDE".includes(g)) $("fNutri").value = g;
+      err.textContent = "";
+    } catch { err.textContent = "No se ha podido consultar. Inténtalo de nuevo."; }
+  };
   $("pBuscar").oninput = pintarLista;
   $("pFiltro").onchange = pintarLista;
   $("fActuales").onclick = e => {
@@ -186,6 +221,9 @@ export function montarProductos(cont, usuario) {
         tienda: $("fTienda").value.trim(),
         como: $("fComo").value,
         cantidad: $("fCant").value || "1",
+        codigo: $("fCodigo").value.trim(), nutri: $("fNutri").value,
+        caduca: $("fCad").value, garantia: $("fGar").value,
+        otra: $("fOtra").value.trim(), otraP: $("fOtraP").value,
         precio: $("fPrecio").value,
         categoria: $("fCat").value,
         notas: $("fNotas").value.trim(),
